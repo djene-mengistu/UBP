@@ -1,4 +1,4 @@
-﻿# UBP
+﻿# UBP: Uncertainty-guided Boundary-selective Prototype refinement
 
 **UBP (Uncertainty-guided Boundary-selective Prototype refinement)** is a lightweight prediction-guided refinement module for 2D medical image segmentation. This repository contains a reproducible implementation, fixed patient-level splits, training and evaluation commands, run-level metrics, and figures for ACDC and Synapse.
 
