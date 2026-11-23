@@ -1,0 +1,20 @@
+{
+  "parameters": 40644493,
+  "input_shape": [
+    1,
+    1,
+    224,
+    224
+  ],
+  "conv_linear_macs": 7771091584,
+  "flops_estimate": 15980015909,
+  "flops_scope": "PyTorch profiler-supported convolution/matmul operators only; does not count all elementwise, normalization, softmax, or custom operations",
+  "latency_ms_median": 10.032275225967169,
+  "latency_ms_p95": 10.23137615993619,
+  "throughput_slices_per_second_batch1": 99.83678469827723,
+  "profile_peak_allocated_mib": 664.3310546875,
+  "precision": "float32",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "cuda_visible_devices": "1",
+  "timing_scope": "network only, warmed up; shared GPU contention may affect latency"
+}

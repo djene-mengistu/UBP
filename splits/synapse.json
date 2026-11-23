@@ -1,0 +1,18 @@
+{
+  "dataset": "synapse",
+  "seed": 2026,
+  "train": [
+    "case0005", "case0006", "case0007", "case0010", "case0021",
+    "case0023", "case0024", "case0026", "case0027", "case0030",
+    "case0031", "case0033", "case0034", "case0037", "case0039"
+  ],
+  "val": ["case0009", "case0028", "case0040"],
+  "test": [
+    "case0001", "case0002", "case0003", "case0004", "case0008",
+    "case0022", "case0025", "case0029", "case0032", "case0035",
+    "case0036", "case0038"
+  ],
+  "protocol": "patient_holdout_from_training_pool",
+  "validation_role": "internal_training_pool_validation",
+  "note": "Validation is three patients held out from the 18-patient training pool. The supplied 12-patient test set remains independent and is evaluated only after checkpoint selection."
+}

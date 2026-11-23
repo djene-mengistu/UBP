@@ -1,0 +1,362 @@
+{
+  "per_class": {
+    "1": {
+      "mean_dice": 0.7949659808654119,
+      "dice_denominator": 3,
+      "mean_hd95": 36.75527353186579,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "2": {
+      "mean_dice": 0.010702341137123745,
+      "dice_denominator": 3,
+      "mean_hd95": 135.7640751342553,
+      "valid_hd95_count": 2,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 2,
+        "both_empty": 0,
+        "missing_prediction": 1,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "3": {
+      "mean_dice": 0.7077163913865027,
+      "dice_denominator": 3,
+      "mean_hd95": 61.09801537943424,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "4": {
+      "mean_dice": 0.6407603224199079,
+      "dice_denominator": 3,
+      "mean_hd95": 51.261854788292965,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "5": {
+      "mean_dice": 0.7165937025448176,
+      "dice_denominator": 3,
+      "mean_hd95": 37.19649692718837,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "6": {
+      "mean_dice": 0.5512627997084495,
+      "dice_denominator": 3,
+      "mean_hd95": 19.065054803220388,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "7": {
+      "mean_dice": 0.6127769479260051,
+      "dice_denominator": 3,
+      "mean_hd95": 43.80005274258301,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    },
+    "8": {
+      "mean_dice": 0.6784659438803256,
+      "dice_denominator": 3,
+      "mean_hd95": 35.804187838776876,
+      "valid_hd95_count": 3,
+      "hd95_denominator": 3,
+      "hd95_status_counts": {
+        "ok": 3,
+        "both_empty": 0,
+        "missing_prediction": 0,
+        "false_positive": 0,
+        "not_computed": 0
+      }
+    }
+  },
+  "overall_foreground_macro_dice": 0.589155553733568,
+  "case_count": 3,
+  "partition": "val",
+  "hd95_units": "voxels",
+  "validation_role": "internal_training_pool_validation",
+  "patient_count": 3,
+  "patient_mean_dice": 0.5891555537335681,
+  "patient_bootstrap_95_ci": [
+    0.3294710722476789,
+    0.7671808324058813
+  ],
+  "bootstrap_note": "Patient resampling for this seed; not training-seed uncertainty.",
+  "evaluation_seconds": 15.040170224383473,
+  "preprocessing_network_restore_seconds": 1.4692068556323647,
+  "inference_throughput_slices_per_second": 294.7168387760017,
+  "geometry_policy": "cubic image resize to model input; bilinear logit restoration before argmax",
+  "cases": [
+    {
+      "case": "case0009_internal_val",
+      "patient": "case0009",
+      "shape": [
+        149,
+        512,
+        512
+      ],
+      "mean_dice": 0.3294710722476789,
+      "classes": [
+        {
+          "class_id": 1,
+          "dice": 0.6834765703946799,
+          "hd95": 53.71219600798314,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 2,
+          "dice": 0.0,
+          "hd95": 252.67746238882486,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 3,
+          "dice": 0.3103975227716003,
+          "hd95": 121.21881042148533,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 4,
+          "dice": 0.1086325886068546,
+          "hd95": 144.84129245487972,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 5,
+          "dice": 0.5286262148333457,
+          "hd95": 88.75809822207775,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 6,
+          "dice": 0.2985725451478876,
+          "hd95": 35.24202037341219,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 7,
+          "dice": 0.015268318919053855,
+          "hd95": 126.40015822774906,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 8,
+          "dice": 0.6907948173080093,
+          "hd95": 37.412563516330636,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        }
+      ]
+    },
+    {
+      "case": "case0028_internal_val",
+      "patient": "case0028",
+      "shape": [
+        89,
+        512,
+        512
+      ],
+      "mean_dice": 0.6708147565471438,
+      "classes": [
+        {
+          "class_id": 1,
+          "dice": 0.8581157348182707,
+          "hd95": 33.640746112835046,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 2,
+          "dice": 0.0,
+          "hd95": null,
+          "hd95_status": "missing_prediction",
+          "gt_present": true,
+          "pred_present": false
+        },
+        {
+          "class_id": 3,
+          "dice": 0.865656323765865,
+          "hd95": 60.343184909248514,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 4,
+          "dice": 0.881280270759176,
+          "hd95": 2.23606797749979,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 5,
+          "dice": 0.6743800506593308,
+          "hd95": 18.708286933869708,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 6,
+          "dice": 0.6534347444016848,
+          "hd95": 5.385164807134504,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 7,
+          "dice": 0.8878106399240336,
+          "hd95": 3.0,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 8,
+          "dice": 0.5458402880487888,
+          "hd95": 62.0,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        }
+      ]
+    },
+    {
+      "case": "case0040_internal_val",
+      "patient": "case0040",
+      "shape": [
+        195,
+        512,
+        512
+      ],
+      "mean_dice": 0.7671808324058813,
+      "classes": [
+        {
+          "class_id": 1,
+          "dice": 0.8433056373832853,
+          "hd95": 22.9128784747792,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 2,
+          "dice": 0.032107023411371234,
+          "hd95": 18.850687879685765,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 3,
+          "dice": 0.9470953276220428,
+          "hd95": 1.7320508075688772,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 4,
+          "dice": 0.932368107893693,
+          "hd95": 6.708203932499369,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 5,
+          "dice": 0.9467748421417762,
+          "hd95": 4.123105625617661,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 6,
+          "dice": 0.701781109575776,
+          "hd95": 16.567979229114467,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 7,
+          "dice": 0.9352518849349277,
+          "hd95": 2.0,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        },
+        {
+          "class_id": 8,
+          "dice": 0.7987627262841785,
+          "hd95": 8.0,
+          "hd95_status": "ok",
+          "gt_present": true,
+          "pred_present": true
+        }
+      ]
+    }
+  ]
+}

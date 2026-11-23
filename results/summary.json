@@ -1,0 +1,315 @@
+{
+  "title": "UBP preliminary results",
+  "seed": 1234,
+  "epochs": 300,
+  "data_protocol": {
+    "acdc": {
+      "train_patients": 90,
+      "val_patients": 10,
+      "test_patients": 50,
+      "train_slices": 1902,
+      "empty_slices": 61
+    },
+    "synapse": {
+      "train_patients": 15,
+      "val_patients": 3,
+      "test_patients": 12,
+      "train_slices": 2211,
+      "empty_slices": 931,
+      "class_pixels": [
+        922056,
+        245028,
+        1344662,
+        1333973,
+        14192919,
+        651861,
+        3119429,
+        3474831
+      ]
+    }
+  },
+  "research_status": "Single-seed exploratory results; not evidence of robust performance or novelty.",
+  "datasets": {
+    "acdc": {
+      "split": {
+        "train_patients": 90,
+        "val_patients": 10,
+        "test_patients": 50,
+        "train_slices": 1902,
+        "empty_slices": 61
+      },
+      "test_patient_mean_dice": 0.891388932842821,
+      "test_patient_count": 50,
+      "test_case_count": 100,
+      "bootstrap_95_ci": [
+        0.883434082979309,
+        0.8985931805703762
+      ],
+      "test_mean_foreground_hd95_voxels": 2.098148341686674,
+      "test_per_class": {
+        "1": {
+          "mean_dice": 0.8706671421180817,
+          "dice_denominator": 100,
+          "mean_hd95": 3.355733048106,
+          "valid_hd95_count": 100,
+          "hd95_denominator": 100,
+          "hd95_status_counts": {
+            "ok": 100,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "2": {
+          "mean_dice": 0.872347512326164,
+          "dice_denominator": 100,
+          "mean_hd95": 1.1387100868715907,
+          "valid_hd95_count": 100,
+          "hd95_denominator": 100,
+          "hd95_status_counts": {
+            "ok": 100,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "3": {
+          "mean_dice": 0.9311521440842168,
+          "dice_denominator": 100,
+          "mean_hd95": 1.800001890082433,
+          "valid_hd95_count": 100,
+          "hd95_denominator": 100,
+          "hd95_status_counts": {
+            "ok": 100,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        }
+      },
+      "class_names": {
+        "1": "Right ventricle",
+        "2": "Myocardium",
+        "3": "Left ventricle"
+      },
+      "validation_patient_mean_dice": 0.8821534145140879,
+      "validation_patient_count": 10,
+      "validation_role": "internal_training_pool_validation",
+      "hd95_units": "voxels",
+      "evaluation_throughput_slices_per_second": 335.38759409418634,
+      "profile": {
+        "parameters": 40644493,
+        "input_shape": [
+          1,
+          1,
+          224,
+          224
+        ],
+        "conv_linear_macs": 7771091584,
+        "flops_estimate": 15980015909,
+        "flops_scope": "PyTorch profiler-supported convolution/matmul operators only; does not count all elementwise, normalization, softmax, or custom operations",
+        "latency_ms_median": 10.032275225967169,
+        "latency_ms_p95": 10.23137615993619,
+        "throughput_slices_per_second_batch1": 99.83678469827723,
+        "profile_peak_allocated_mib": 664.3310546875,
+        "precision": "float32",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "cuda_visible_devices": "1",
+        "timing_scope": "network only, warmed up; shared GPU contention may affect latency"
+      },
+      "training": {
+        "phase": "complete",
+        "epochs": 300,
+        "best_val_dice": 0.8821534145140879,
+        "training_seconds": 4063.9295707037672,
+        "peak_allocated_mib": 8441.529296875
+      }
+    },
+    "synapse": {
+      "split": {
+        "train_patients": 15,
+        "val_patients": 3,
+        "test_patients": 12,
+        "train_slices": 2211,
+        "empty_slices": 931,
+        "class_pixels": [
+          922056,
+          245028,
+          1344662,
+          1333973,
+          14192919,
+          651861,
+          3119429,
+          3474831
+        ]
+      },
+      "test_patient_mean_dice": 0.7630668732052882,
+      "test_patient_count": 12,
+      "test_case_count": 12,
+      "bootstrap_95_ci": [
+        0.7212610224557591,
+        0.8039263050429232
+      ],
+      "test_mean_foreground_hd95_voxels": 35.32359342853058,
+      "test_per_class": {
+        "1": {
+          "mean_dice": 0.828936421591563,
+          "dice_denominator": 12,
+          "mean_hd95": 22.162963508459118,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "2": {
+          "mean_dice": 0.533895829014447,
+          "dice_denominator": 12,
+          "mean_hd95": 13.979022626244568,
+          "valid_hd95_count": 10,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 10,
+            "both_empty": 0,
+            "missing_prediction": 1,
+            "false_positive": 1,
+            "not_computed": 0
+          }
+        },
+        "3": {
+          "mean_dice": 0.8251812411039459,
+          "dice_denominator": 12,
+          "mean_hd95": 45.564323768610286,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "4": {
+          "mean_dice": 0.7740204656636606,
+          "dice_denominator": 12,
+          "mean_hd95": 83.39192690465583,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "5": {
+          "mean_dice": 0.9287654852971317,
+          "dice_denominator": 12,
+          "mean_hd95": 24.977410926763948,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "6": {
+          "mean_dice": 0.5779610396276446,
+          "dice_denominator": 12,
+          "mean_hd95": 13.262791910496235,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "7": {
+          "mean_dice": 0.857582783782277,
+          "dice_denominator": 12,
+          "mean_hd95": 59.11540250790038,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        },
+        "8": {
+          "mean_dice": 0.7781917195616356,
+          "dice_denominator": 12,
+          "mean_hd95": 20.134905275114296,
+          "valid_hd95_count": 12,
+          "hd95_denominator": 12,
+          "hd95_status_counts": {
+            "ok": 12,
+            "both_empty": 0,
+            "missing_prediction": 0,
+            "false_positive": 0,
+            "not_computed": 0
+          }
+        }
+      },
+      "class_names": {
+        "1": "Aorta",
+        "2": "Gallbladder",
+        "3": "Left kidney",
+        "4": "Right kidney",
+        "5": "Liver",
+        "6": "Pancreas",
+        "7": "Spleen",
+        "8": "Stomach"
+      },
+      "validation_patient_mean_dice": 0.5891555537335681,
+      "validation_patient_count": 3,
+      "validation_role": "internal_training_pool_validation",
+      "hd95_units": "voxels",
+      "evaluation_throughput_slices_per_second": 342.3428086525002,
+      "profile": {
+        "parameters": 40644141,
+        "input_shape": [
+          1,
+          1,
+          224,
+          224
+        ],
+        "conv_linear_macs": 7731655808,
+        "flops_estimate": 15902712078,
+        "flops_scope": "PyTorch profiler-supported convolution/matmul operators only; does not count all elementwise, normalization, softmax, or custom operations",
+        "latency_ms_median": 9.276119526475668,
+        "latency_ms_p95": 9.619984822347758,
+        "throughput_slices_per_second_batch1": 107.84715905770665,
+        "profile_peak_allocated_mib": 664.58154296875,
+        "precision": "float32",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "cuda_visible_devices": "1",
+        "timing_scope": "network only, warmed up; shared GPU contention may affect latency"
+      },
+      "training": {
+        "phase": "complete",
+        "epochs": 300,
+        "best_val_dice": 0.5891555537335681,
+        "training_seconds": 4162.871185156517,
+        "peak_allocated_mib": 8468.44873046875
+      }
+    }
+  }
+}

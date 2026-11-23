@@ -1,0 +1,7 @@
+{
+  "phase": "complete",
+  "epochs": 300,
+  "best_val_dice": 0.5891555537335681,
+  "training_seconds": 4162.871185156517,
+  "peak_allocated_mib": 8468.44873046875
+}
