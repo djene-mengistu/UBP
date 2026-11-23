@@ -1,75 +1,187 @@
-﻿# UBP: Uncertainty-guided Boundary-selective Prototype refinement
+ <div align="center">
 
-**UBP (Uncertainty-guided Boundary-selective Prototype refinement)** is a lightweight prediction-guided refinement module for 2D medical image segmentation. This repository contains a reproducible implementation, fixed patient-level splits, training and evaluation commands, run-level metrics, and figures for ACDC and Synapse.
+# 🩺 UBP
+### Uncertainty-Guided Boundary-Selective Prototype Refinement
 
-> **STATUS:** preliminary, these results are descriptive; they do not establish novelty or robust performance. HD95 is reported in voxel units because verified physical spacing is unavailable.
+**Lightweight Prediction-Guided Refinement for Medical Image Segmentation**
 
-## Method
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Deep_Learning-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Status](https://img.shields.io/badge/Status-Research_Prototype-orange)
+![Datasets](https://img.shields.io/badge/Datasets-ACDC_%7C_Synapse-blue)
 
-UBP refines a late decoder feature map using per-image prototypes built from reliable predicted regions. Pixels are selected when maximum class confidence is at least 0.7 and normalized entropy is at most 0.6. A local structural cue is compared with probability gradients; uncertainty and feature discrepancy produce a spatial gate. The learned correction is residual, with a scalar initialized to zero. A coarse prediction head receives auxiliary Dice plus cross-entropy supervision during training. Ground-truth labels are not used by the refinement at inference.
+**[Overview](#-overview) · [Architecture](#-architecture) · [Results](#-experimental-results) · [Installation](#-installation) · [Usage](#-quick-start) · [License](#-license)**
 
-For feature tensor `F`, coarse probabilities `p`, gate `g`, and correction `Δ`, the update is `F′ = F + α · g · Δ(F, context(p,F), entropy(p), structure(F,p))`, with `α=0` initially. Unsupported class prototypes are masked. The confidence thresholds are implementation choices, not calibrated uncertainty estimates.
+</div>
 
-![UBP method diagram](results/figures/ubp_architecture.png)
+---
 
-## UBP performance
+## 🔍 Overview
 
-Single-seed results (seed 1234, 300 epochs). Checkpoints were selected using validation cases held out from the training pool; supplied test cases were evaluated afterwards.
+**UBP (Uncertainty-Guided Boundary-Selective Prototype Refinement)** is a lightweight, prediction-guided feature refinement module designed to improve anatomical segmentation by exploiting reliable class prototypes, structural cues, and uncertainty-aware spatial gating.
 
-| Dataset | Test patients/cases | Mean Dice (patient bootstrap 95% CI) | Macro foreground HD95 (voxels) |
-|---|---:|---:|---:|
-| ACDC | 50 patients | 0.8914 (0.8834–0.8986) | 2.10 |
-| Synapse | 12 cases | 0.7631 (0.7213–0.8039) | 35.32 |
+Rather than directly modifying segmentation masks, UBP operates on late-stage decoder features to produce a learned residual correction.
 
-### ACDC per-class test metrics
+### ✨ Key Features
 
-| ACDC structure | Dice | HD95 (voxels; valid / 100 volumes) |
-|---|---:|---:|
-| Right ventricle (ID 1) | 0.8707 | 3.36 (100/100) |
-| Myocardium (ID 2) | 0.8723 | 1.14 (100/100) |
-| Left ventricle (ID 3) | 0.9312 | 1.80 (100/100) |
+- 🎯 **Confidence-aware prototype selection** — Builds class prototypes from reliable predicted regions.
+- 🧩 **Boundary-selective refinement** — Integrates structural information and probability gradients.
+- 🛡️ **Uncertainty-guided gating** — Controls feature corrections using entropy and feature discrepancy.
+- ⚡ **Residual integration** — Uses a learnable scaling parameter initialized to zero.
+- 🔬 **Reproducible experiments** — Includes fixed patient-level splits, configurations, metrics, and visualizations.
 
-### Synapse per-class test metrics
+> **Research status:** UBP is an experimental research prototype. The reported results are single-seed observations and do not independently establish novelty, statistical superiority, or robustness.
 
-| Synapse structure | Dice | HD95 (voxels; valid / 12 cases) |
-|---|---:|---:|
-| Aorta (ID 1) | 0.8289 | 22.16 (12/12) |
-| Gallbladder (ID 2) | 0.5339 | 13.98 (10/12) |
-| Left kidney (ID 3) | 0.8252 | 45.56 (12/12) |
-| Right kidney (ID 4) | 0.7740 | 83.39 (12/12) |
-| Liver (ID 5) | 0.9288 | 24.98 (12/12) |
-| Pancreas (ID 6) | 0.5780 | 13.26 (12/12) |
-| Spleen (ID 7) | 0.8576 | 59.12 (12/12) |
-| Stomach (ID 8) | 0.7782 | 20.13 (12/12) |
+## 🏗️ Architecture
 
-For Synapse class ID 2 (gallbladder), two HD95 outcomes are undefined (one missing prediction and one false-positive-only case); raw metrics retain these statuses and denominators.
+<div align="center">
 
-### Compute profile
+<img src="results/figures/ubp_architecture.png" alt="UBP architecture" width="90%"/>
 
-| Dataset | Parameters | Estimated FLOPs* | Batch-one median latency | Network throughput | Whole-volume evaluation throughput | Peak training VRAM | Training time |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| ACDC | 40,644,493 | 15.980 G | 10.03 ms | 99.84 slices/s | 335.39 slices/s | 8.24 GiB | 67.7 min |
-| Synapse | 40,644,141 | 15.903 G | 9.28 ms | 107.85 slices/s | 342.34 slices/s | 8.27 GiB | 69.4 min |
+*Overview of uncertainty-guided, boundary-selective prototype refinement.*
 
-\*FLOPs are profiler estimates covering supported convolution and matrix operators only. Network latency is warmed-up batch-one inference; whole-volume throughput includes preprocessing and output restoration. Measurements came from shared GPUs and are descriptive snapshots.
+</div>
 
-### Qualitative test examples
+### How UBP Works
 
-These figures show only test slices with foreground in the ground truth, so the examples focus on detected and missed anatomy. Each column shows the image, ground truth, UBP prediction, and pixel-level disagreement; yellow marks any GT/prediction mismatch. Colors name the anatomical structures.
+1. **Coarse prediction:** A lightweight prediction head estimates class probabilities from decoder features.
+2. **Prototype construction:** Reliable predicted regions contribute to class-specific feature prototypes.
+3. **Structural analysis:** Local structural cues are compared with probability gradients.
+4. **Spatial gating:** Uncertainty and feature discrepancy determine where corrections are applied.
+5. **Feature refinement:** A gated residual correction updates the decoder representation.
 
-**ACDC — patient 101, frame 01:**
+The refinement can be expressed as:
 
-![UBP ACDC GT-positive test slices with ground truth, prediction, and disagreement](results/figures/acdc_gt_positive_examples.png)
+$$
+F' = F + \alpha\, g\, \Delta(F, C, U, S)
+$$
 
-**Synapse — case 0001:**
+where:
 
-![UBP Synapse GT-positive test slices with ground truth, prediction, and disagreement](results/figures/synapse_gt_positive_examples.png)
+- $F$ and $F'$ denote the original and refined features.
+- $C$ represents prototype-based context.
+- $U$ represents prediction uncertainty.
+- $S$ represents structural information.
+- $g$ is the learned spatial gate.
+- $\alpha$ is a learnable residual scaling parameter initialized to zero.
 
-Aggregate visualizations include [training curves](results/figures/training_curves.png), [ACDC per-structure test Dice](results/figures/acdc_per_class_dice.png), [Synapse per-organ test Dice](results/figures/synapse_per_class_dice.png), [patient split and empty-mask summary](results/figures/data_overview.png), and [Synapse organ imbalance](results/figures/synapse_class_imbalance.png). No dataset files or checkpoints are included.
+Prototype selection uses a maximum confidence threshold of **0.7** and normalized entropy threshold of **0.6**. Unsupported class prototypes are masked. These thresholds are heuristic selection criteria, not calibrated uncertainty estimates.
 
-## Data and protocol
+An auxiliary coarse-prediction head receives Dice and cross-entropy supervision during training. Ground-truth labels are not used by the refinement module at inference.
 
-Data are not bundled. Expected layout:
+## 📊 Experimental Results
+
+UBP was evaluated on two public medical image segmentation benchmarks using fixed patient-level partitions.
+
+### Quantitative Performance
+
+| Dataset | Test Set | Mean Dice ↑ | HD95 ↓ |
+|:---|:---:|:---:|:---:|
+| **ACDC** | 50 patients | **89.14%** | **2.10** |
+| **Synapse** | 12 cases | **76.31%** | **35.32** |
+
+*HD95 is reported in voxel units because verified physical spacing was unavailable. Dice values are accompanied by patient/case-bootstrap 95% confidence intervals of 88.34–89.86% for ACDC and 72.13–80.39% for Synapse.*
+
+**Evaluation protocol:** Single seed (1234), 300 training epochs, validation-based checkpoint selection, and final evaluation on held-out test partitions.
+
+### 🫀 ACDC — Cardiac MRI Segmentation
+
+<div align="center">
+
+<img src="results/figures/acdc_gt_positive_examples.png" alt="ACDC segmentation examples" width="95%"/>
+
+*Qualitative examples showing input images, ground truth, UBP predictions, and disagreement regions.*
+
+<img src="results/figures/acdc_per_class_dice.png" alt="ACDC per-class Dice" width="65%"/>
+
+</div>
+
+### 🏥 Synapse — Multi-Organ CT Segmentation
+
+<div align="center">
+
+<img src="results/figures/synapse_gt_positive_examples.png" alt="Synapse segmentation examples" width="95%"/>
+
+*Multi-organ segmentation examples with pixel-level prediction disagreements.*
+
+<img src="results/figures/synapse_per_class_dice.png" alt="Synapse per-class Dice" width="70%"/>
+
+</div>
+
+### 📈 Training and Efficiency
+
+<div align="center">
+
+<img src="results/figures/training_curves.png" alt="Training curves" width="80%"/>
+
+</div>
+
+| Metric | ACDC | Synapse |
+|:---|---:|---:|
+| Parameters | 40.64 M | 40.64 M |
+| Estimated FLOPs | 15.98 G | 15.90 G |
+| Batch-1 latency | 10.03 ms | 9.28 ms |
+| Peak training VRAM | 8.24 GiB | 8.27 GiB |
+| Training time | 67.7 min | 69.4 min |
+
+*FLOPs are partial operator estimates. Latency measurements were collected on shared GPUs and should not be interpreted as standardized hardware benchmarks.*
+
+📑 **[Detailed Experimental Report](results/REPORT.md)** · **[Raw Metrics](results/raw/)** · **[Summary CSV](results/summary.csv)**
+
+<details>
+<summary><b>📋 View per-class segmentation results</b></summary>
+
+#### ACDC
+
+| Structure | Dice |
+|---|---:|
+| Right ventricle | 0.8707 |
+| Myocardium | 0.8723 |
+| Left ventricle | **0.9312** |
+
+#### Synapse
+
+| Structure | Dice |
+|---|---:|
+| Aorta | 0.8289 |
+| Gallbladder | 0.5339 |
+| Left kidney | 0.8252 |
+| Right kidney | 0.7740 |
+| Liver | **0.9288** |
+| Pancreas | 0.5780 |
+| Spleen | 0.8576 |
+| Stomach | 0.7782 |
+
+Detailed HD95 values, valid-case denominators, and undefined outcomes are retained in the experimental report and raw metric files.
+
+</details>
+
+## 🚀 Installation
+
+### Requirements
+
+- Linux
+- Python 3.11+
+- NVIDIA GPU with CUDA support
+- CUDA-compatible PyTorch
+
+```bash
+git clone https://github.com/djene-mengistu/UBP.git
+cd UBP
+
+conda create -n ubp python=3.11 -y
+conda activate ubp
+
+# Install a compatible CUDA-enabled PyTorch build first.
+pip install -r requirements.txt
+```
+
+See [ENVIRONMENT.md](ENVIRONMENT.md) for the reference software environment.
+
+## 📂 Dataset Preparation
+
+Download the ACDC and Synapse datasets separately and organize the preprocessed files as follows:
 
 ```text
 data/
@@ -82,61 +194,140 @@ data/
     └── test_vol_h5/
 ```
 
-The fixed manifests in `splits/` use 90/10 training-pool patient separation for ACDC (90 train, 10 validation, 50 supplied test patients) and 15/3/12 cases for Synapse. The test partitions are disjoint and held until final evaluation. All valid training slices are retained, including 61/1,902 empty ACDC masks and 931/2,211 empty Synapse masks. Synapse validation volumes are assembled from the held-out patients' ordered training slices.
+Update `data_root` in the corresponding configuration file.
 
-Inputs are resized to 224×224, images with cubic interpolation and labels with nearest-neighbor interpolation. The experiment preserves the stored image ranges: [0,1] for these MEDDATA copies. Use the same data version and preprocessing for a like-for-like rerun. The Synapse loader resizes/caches slices before stochastic augmentation; this order is part of the recorded experiment.
+| Dataset | Train | Validation | Test |
+|---|---:|---:|---:|
+| ACDC | 90 patients | 10 patients | 50 patients |
+| Synapse | 15 cases | 3 cases | 12 cases |
 
-## Setup
+Fixed split manifests are available in [`splits/`](splits/).
 
-Use Linux, Python 3.11+, an NVIDIA GPU, and a CUDA-enabled PyTorch build. Reference versions from the completed runs are in [`ENVIRONMENT.md`](ENVIRONMENT.md).
+**Important:** Dataset files and pretrained checkpoints are not distributed with this repository.
 
-```bash
-conda create -n ubp python=3.11 -y
-conda activate ubp
-# Install the PyTorch/CUDA build appropriate for your driver.
-pip install -r requirements.txt
-```
+## ⚙️ Quick Start
 
-Place or edit `data_root` in the configs.  
-
-## Train and evaluate
+### 1. Smoke Test
 
 ```bash
-export CUDA_VISIBLE_DEVICES=0
 python -B scripts/run_ubp.py \
   --config configs/ubp_synapse.json \
   --partition-manifest splits/synapse.json \
-  --run-dir runs/synapse_ubp --mode smoke
-
-python -B scripts/run_ubp.py \
-  --config configs/ubp_synapse.json \
-  --partition-manifest splits/synapse.json \
-  --run-dir runs/synapse_ubp --mode train
-
-python -B scripts/run_ubp.py \
-  --config configs/ubp_synapse.json \
-  --partition-manifest splits/synapse.json \
-  --run-dir runs/synapse_ubp --mode evaluate --partition val
-
-python -B scripts/run_ubp.py \
-  --config configs/ubp_synapse.json \
-  --partition-manifest splits/synapse.json \
-  --run-dir runs/synapse_ubp --mode evaluate --partition test
+  --run-dir runs/synapse_ubp \
+  --mode smoke
 ```
 
-For ACDC, use `configs/ubp_acdc.json` and `splits/acdc.json`. Configurations use batch size 24, AdamW, 300 epochs, FP32, and dataset-specific learning rates/loss weights recorded in JSON. Use a distinct run directory for every seed. The code checks patient overlap and verifies the selected checkpoint against its config and split.
+### 2. Train UBP
 
-## Rebuild reports and visualize arrays
+```bash
+python -B scripts/run_ubp.py \
+  --config configs/ubp_synapse.json \
+  --partition-manifest splits/synapse.json \
+  --run-dir runs/synapse_ubp \
+  --mode train
+```
+
+### 3. Evaluate
+
+Validation:
+
+```bash
+python -B scripts/run_ubp.py \
+  --config configs/ubp_synapse.json \
+  --partition-manifest splits/synapse.json \
+  --run-dir runs/synapse_ubp \
+  --mode evaluate \
+  --partition val
+```
+
+Final test evaluation:
+
+```bash
+python -B scripts/run_ubp.py \
+  --config configs/ubp_synapse.json \
+  --partition-manifest splits/synapse.json \
+  --run-dir runs/synapse_ubp \
+  --mode evaluate \
+  --partition test
+```
+
+For **ACDC**, replace the Synapse configuration and split manifest with:
+
+- `configs/ubp_acdc.json`
+- `splits/acdc.json`
+
+Use a separate run directory for each dataset and random seed.
+
+<details>
+<summary><b>🔧 Additional utilities</b></summary>
+
+Regenerate reports and result figures:
 
 ```bash
 python scripts/make_release_assets.py
+```
+
+Visualize aligned NumPy arrays:
+
+```bash
 python scripts/visualize_prediction.py \
-  --image image.npy --label label.npy --prediction prediction.npy \
+  --image image.npy \
+  --label label.npy \
+  --prediction prediction.npy \
   --output figures/prediction.png
 ```
 
-The first command regenerates result tables and summary figures from `results/raw/`. The second makes an image/ground-truth/prediction overlay from aligned 2D NumPy arrays.
+The visualization utility supports input images, ground-truth labels, and predictions.
 
-## License and datasets
+</details>
 
-This project is released under the MIT License. The required license for the included model components is retained in [`model_components/LICENSE`](model_components/LICENSE). Obtain ACDC and Synapse separately and follow their dataset terms.
+## 🗂️ Repository Structure
+
+```text
+UBP/
+├── configs/             # Dataset-specific configurations
+├── model_components/    # Backbone and model dependencies
+├── results/
+│   ├── figures/         # Architecture and visualizations
+│   ├── raw/             # Run-level experimental metrics
+│   └── REPORT.md        # Detailed experimental report
+├── scripts/             # Training and visualization utilities
+├── splits/              # Fixed patient-level partitions
+├── src/medical_seg/     # UBP implementation
+├── ENVIRONMENT.md       # Reference environment
+├── requirements.txt
+└── README.md
+```
+
+## 🔬 Reproducibility Notes
+
+- Fixed patient-level train/validation/test partitions are used.
+- All valid training slices are retained, including empty foreground masks.
+- Input images and labels are resized to 224 × 224.
+- Training uses AdamW, FP32, batch size 24, and 300 epochs.
+- Checkpoints are selected using validation data.
+- Dataset-specific learning rates and loss weights are defined in the configuration files.
+- Physical voxel spacing is not verified; HD95 is therefore reported in voxel units.
+- Single-seed results should not be interpreted as multi-run statistical evidence.
+
+For exact preprocessing and evaluation details, consult the [experimental report](results/REPORT.md) and configuration files.
+
+## 📜 License
+
+This project is distributed under the [MIT License](LICENSE).
+
+Licensing information for included third-party model components is preserved in [`model_components/LICENSE`](model_components/LICENSE).
+
+ACDC and Synapse datasets must be obtained separately under their respective terms.
+
+---
+
+<div align="center">
+
+**UBP — Uncertainty-Guided Refinement for Medical Image Segmentation**
+
+⭐ If this repository is useful for your research, consider starring it.
+
+[⬆ Back to Top](#-ubp)
+
+</div>
